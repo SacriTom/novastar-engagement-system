@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NovaStar Hotels — AI-Powered Post-Stay Engagement System</title>
+<style>
+/* ===================================================================
+   RESET & BASE
+   =================================================================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: #f8fafc;
+  color: #1e293b;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ===================================================================
+   HEADER & NAV
+   =================================================================== */
+header {
+  background: linear-gradient(135deg, #1a365d 0%, #234681 100%);
+  color: #fff;
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand-icon {
+  width: 36px; height: 36px;
+  background: #0d9488;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 18px; color: #fff;
+}
+.brand h1 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.brand-tag {
+  font-size: 11px;
+  opacity: 0.7;
+  font-weight: 400;
+}
+nav {
+  display: flex;
+  gap: 0;
+  background: rgba(0,0,0,0.15);
+  padding: 0 24px;
+}
+nav button {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.7);
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+nav button:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.05);
+}
+nav button.active {
+  color: #fff;
+  border-bottom-color: #0d9488;
+  background: rgba(255,255,255,0.08);
+}
+
+/* ===================================================================
+   MAIN CONTAINER
+   =================================================================== */
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.tab-content {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+.tab-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===================================================================
+   CARDS & PANELS
+   =================================================================== */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a365d;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+/* Stat cards row */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  padding: 20px;
+  text-align: center;
+  border-top: 4px solid #0d9488;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+.stat-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1a365d;
+  line-height: 1.1;
+}
+.stat-label {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* ===================================================================
+   WORKFLOW VISUAL
+   =================================================================== */
+.workflow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  overflow-x: auto;
+  padding: 8px 0;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.workflow-step {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.agent-card {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 16px 20px;
+  text-align: center;
+  min-width: 140px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.agent-card:hover {
+  transform: translateY(-3px);
+  border-color: #0d9488;
+}
+.agent-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  margin: 0 auto 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 16px; color: #fff;
+}
+.agent-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: #1a365d;
+}
+.agent-role {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+}
+.agent-num {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 4px;
+}
+.workflow-arrow {
+  font-size: 20px;
+  color: #0d9488;
+  padding: 0 6px;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+}
+
+/* ===================================================================
+   TABLES
+   =================================================================== */
+.table-wrap { overflow-x: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead th {
+  background: #1a365d;
+  color: #fff;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  vertical-align: middle;
+}
+tbody tr:nth-child(even) { background: #f8fafc; }
+tbody tr:hover { background: #f1f5f9; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.delta-pos { color: #059669; font-weight: 600; }
+.delta-neg { color: #dc2626; font-weight: 600; }
+
+/* ===================================================================
+   FORMS & CONTROLS
+   =================================================================== */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.control-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.control-group input[type="number"],
+.control-group input[type="range"],
+.control-group select {
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #fff;
+  min-width: 120px;
+}
+.control-group input[type="range"] {
+  padding: 4px 0;
+  border: none;
+  min-width: 180px;
+  accent-color: #0d9488;
+}
+.range-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0d9488;
+  min-width: 40px;
+  text-align: center;
+}
+.btn {
+  padding: 10px 24px;
+  background: #0d9488;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.btn:hover { background: #0f766e; }
+.btn:active { transform: scale(0.97); }
+.btn-secondary {
+  background: #1a365d;
+}
+.btn-secondary:hover { background: #2d4a7a; }
+
+/* ===================================================================
+   BADGES
+   =================================================================== */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+.badge-high { background: #dcfce7; color: #166534; }
+.badge-medium-high { background: #fef9c3; color: #854d0e; }
+.badge-medium { background: #e0f2fe; color: #075985; }
+.badge-low { background: #fee2e2; color: #991b1b; }
+
+/* ===================================================================
+   PROGRESS BARS
+   =================================================================== */
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.progress-bar {
+  flex: 1;
+  height: 20px;
+  background: #e2e8f0;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  min-width: 120px;
+}
+.progress-fill-current {
+  height: 100%;
+  background: #94a3b8;
+  border-radius: 10px;
+  position: absolute;
+  top: 0; left: 0;
+  transition: width 0.5s ease;
+}
+.progress-fill-target {
+  height: 100%;
+  background: #0d9488;
+  border-radius: 10px;
+  position: absolute;
+  top: 0; left: 0;
+  opacity: 0.3;
+  transition: width 0.5s ease;
+}
+.progress-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  min-width: 80px;
+  text-align: right;
+}
+
+/* ===================================================================
+   ENGAGEMENT ENGINE - TRIGGER CARDS
+   =================================================================== */
+.trigger-card {
+  background: #fff;
+  border-radius: 12px;
+  border-left: 5px solid #0d9488;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-bottom: 16px;
+  transition: transform 0.2s ease;
+}
+.trigger-card:hover {
+  transform: translateX(4px);
+}
+.trigger-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.trigger-day {
+  background: #1a365d;
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.trigger-stage {
+  font-weight: 700;
+  color: #1a365d;
+  font-size: 15px;
+}
+.trigger-channel {
+  background: #f0fdfa;
+  color: #0d9488;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.trigger-subject {
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.trigger-body {
+  font-size: 13px;
+  color: #64748b;
+  white-space: pre-line;
+  line-height: 1.5;
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+.trigger-offer {
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #92400e;
+}
+.trigger-offer strong { color: #78350f; }
+
+/* Guest profile card */
+.guest-profile {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  padding: 20px;
+  background: linear-gradient(135deg, #1a365d 0%, #234681 100%);
+  border-radius: 12px;
+  color: #fff;
+  margin-bottom: 20px;
+}
+.profile-item label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  opacity: 0.7;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+.profile-item span {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* ===================================================================
+   FINANCIAL TABLE HIGHLIGHT
+   =================================================================== */
+.financial-row { font-weight: 700; }
+.revenue-highlight {
+  background: #f0fdfa;
+  font-weight: 700;
+  color: #0d9488;
+}
+
+/* ===================================================================
+   SECTION TITLES
+   =================================================================== */
+.section-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1a365d;
+  margin-bottom: 4px;
+}
+.section-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 20px;
+}
+
+/* ===================================================================
+   LINK STYLES
+   =================================================================== */
+a {
+  color: #0d9488;
+  text-decoration: none;
+  font-weight: 600;
+}
+a:hover { text-decoration: underline; }
+
+/* ===================================================================
+   FOOTER
+   =================================================================== */
+footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 12px;
+  color: #94a3b8;
+  border-top: 1px solid #e2e8f0;
+  margin-top: 40px;
+}
+
+/* ===================================================================
+   RESPONSIVE
+   =================================================================== */
+@media (max-width: 768px) {
+  main { padding: 16px; }
+  .header-top { padding: 10px 16px; }
+  nav { padding: 0 8px; }
+  nav button { padding: 10px 12px; font-size: 12px; }
+  .stat-value { font-size: 24px; }
+  .workflow { flex-direction: column; align-items: center; }
+  .workflow-arrow { transform: rotate(90deg); padding: 4px 0; }
+  .workflow-step { flex-direction: column; }
+  .controls { flex-direction: column; }
+  .guest-profile { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  nav button { padding: 8px 10px; font-size: 11px; }
+  .brand h1 { font-size: 15px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ================================================================
+     HEADER
+     ================================================================ -->
+<header>
+  <div class="header-top">
+    <div class="brand">
+      <div class="brand-icon">N</div>
+      <div>
+        <h1>NovaStar Hotels <span class="brand-tag">AI Engagement System</span></h1>
+      </div>
+    </div>
+    <a href="#" id="github-link" style="color:#fff;font-size:13px;opacity:0.8;" target="_blank" rel="noopener">GitHub Repository</a>
+  </div>
+  <nav id="main-nav">
+    <button class="active" data-tab="home">Dashboard</button>
+    <button data-tab="simulation">Simulation</button>
+    <button data-tab="engine">Engagement Engine</button>
+    <button data-tab="segments">Guest Segments</button>
+  </nav>
+</header>
+
+<!-- ================================================================
+     MAIN CONTENT
+     ================================================================ -->
+<main>
+
+  <!-- ============================================================
+       TAB 1: DASHBOARD HOME
+       ============================================================ -->
+  <div id="tab-home" class="tab-content active">
+    <div style="text-align:center;margin-bottom:32px;">
+      <h2 style="font-size:28px;font-weight:800;color:#1a365d;margin-bottom:4px;">NovaStar Hotels</h2>
+      <p style="font-size:18px;color:#0d9488;font-weight:600;margin-bottom:2px;">AI-Powered Post-Stay Engagement System</p>
+      <p style="font-size:14px;color:#94a3b8;">Team AWESOME &mdash; Academic Exercise</p>
+    </div>
+
+    <!-- Stat cards -->
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-value">45</div>
+        <div class="stat-label">Properties Worldwide</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">80,000</div>
+        <div class="stat-label">Guests / Year</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">12.1%</div>
+        <div class="stat-label">Current Rebooking Rate</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">$34.2M</div>
+        <div class="stat-label">Annual Revenue Gap</div>
+      </div>
+    </div>
+
+    <!-- Project Summary -->
+    <div class="card">
+      <div class="card-title">Project Summary</div>
+      <p style="font-size:14px;color:#475569;line-height:1.7;">
+        NovaStar Hotels, a mid-scale chain with 45 properties across 14 cities, faces a critical guest retention challenge.
+        Despite serving over 80,000 guests annually, the current post-stay engagement approach yields only a 12.1% rebooking rate,
+        well below the industry benchmark of 20-25%. This translates to an estimated $34.2 million annual revenue gap.
+        The root causes include fragmented guest data (57% of OTA-booked guests lack direct contact info), generic email-only
+        outreach with 18.4% open rates, and the absence of a loyalty program that drives rebooking behavior.
+      </p>
+      <p style="font-size:14px;color:#475569;line-height:1.7;margin-top:12px;">
+        Our solution is an AI-powered post-stay engagement system that implements a 6-stage guest journey framework,
+        multi-channel personalised communication (email, push, SMS, in-app), and a redesigned loyalty program.
+        The system targets a weighted rebooking rate of approximately 20% -- an 8 percentage-point lift --
+        through segment-specific engagement strategies calibrated to each guest's lifecycle stage and churn risk.
+      </p>
+    </div>
+
+    <!-- 5-Agent Workflow -->
+    <div class="card">
+      <div class="card-title">5-Agent Workflow</div>
+      <div class="workflow">
+        <div class="workflow-step">
+          <div class="agent-card">
+            <div class="agent-avatar" style="background:#3b82f6;">R</div>
+            <div class="agent-name">Riley</div>
+            <div class="agent-role">The Researcher</div>
+            <div class="agent-num">Agent 01</div>
+          </div>
+          <div class="workflow-arrow">&#8594;</div>
+        </div>
+        <div class="workflow-step">
+          <div class="agent-card">
+            <div class="agent-avatar" style="background:#8b5cf6;">D</div>
+            <div class="agent-name">Dana</div>
+            <div class="agent-role">The Designer</div>
+            <div class="agent-num">Agent 02</div>
+          </div>
+          <div class="workflow-arrow">&#8594;</div>
+        </div>
+        <div class="workflow-step">
+          <div class="agent-card">
+            <div class="agent-avatar" style="background:#0d9488;">M</div>
+            <div class="agent-name">Max</div>
+            <div class="agent-role">The Maker</div>
+            <div class="agent-num">Agent 03</div>
+          </div>
+          <div class="workflow-arrow">&#8594;</div>
+        </div>
+        <div class="workflow-step">
+          <div class="agent-card">
+            <div class="agent-avatar" style="background:#f59e0b;">C</div>
+            <div class="agent-name">Casey</div>
+            <div class="agent-role">The Checker</div>
+            <div class="agent-num">Agent 04</div>
+          </div>
+          <div class="workflow-arrow">&#8594;</div>
+        </div>
+        <div class="workflow-step">
+          <div class="agent-card">
+            <div class="agent-avatar" style="background:#ef4444;">M</div>
+            <div class="agent-name">Morgan</div>
+            <div class="agent-role">The Messenger</div>
+            <div class="agent-num">Agent 05</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       TAB 2: SIMULATION
+       ============================================================ -->
+  <div id="tab-simulation" class="tab-content">
+    <h2 class="section-title">Guest Journey Simulation</h2>
+    <p class="section-subtitle">90-day post-stay journey &mdash; BEFORE vs AFTER the AI engagement system</p>
+
+    <!-- Controls -->
+    <div class="card">
+      <div class="controls">
+        <div class="control-group">
+          <label>Number of Guests</label>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="range" id="sim-guests" min="50" max="500" step="10" value="100">
+            <span class="range-value" id="sim-guests-val">100</span>
+          </div>
+        </div>
+        <div class="control-group">
+          <label>Random Seed</label>
+          <input type="number" id="sim-seed" value="42" min="1" max="99999" style="width:100px;">
+        </div>
+        <div class="control-group">
+          <label>&nbsp;</label>
+          <button class="btn" onclick="runSimulation()">Run Simulation</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results (populated by JS) -->
+    <div id="sim-results"></div>
+  </div>
+
+  <!-- ============================================================
+       TAB 3: ENGAGEMENT ENGINE
+       ============================================================ -->
+  <div id="tab-engine" class="tab-content">
+    <h2 class="section-title">Engagement Engine</h2>
+    <p class="section-subtitle">Generate a personalised post-stay trigger plan for any guest profile</p>
+
+    <!-- Controls -->
+    <div class="card">
+      <div class="controls">
+        <div class="control-group">
+          <label>Guest Segment</label>
+          <select id="eng-segment">
+            <option value="Business Regular">Business Regular</option>
+            <option value="Weekend Leisure Couple">Weekend Leisure Couple</option>
+            <option value="Family Vacationer" selected>Family Vacationer</option>
+            <option value="Budget-Conscious Solo">Budget-Conscious Solo</option>
+            <option value="Group/Event Attendee">Group/Event Attendee</option>
+            <option value="Extended-Stay/Relocation">Extended-Stay/Relocation</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label>City</label>
+          <select id="eng-city">
+            <option value="Austin" selected>Austin</option>
+            <option value="Orlando">Orlando</option>
+            <option value="Chicago">Chicago</option>
+            <option value="Denver">Denver</option>
+            <option value="Barcelona">Barcelona</option>
+            <option value="London">London</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label>Nights</label>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="range" id="eng-nights" min="1" max="14" value="4">
+            <span class="range-value" id="eng-nights-val">4</span>
+          </div>
+        </div>
+        <div class="control-group">
+          <label>&nbsp;</label>
+          <button class="btn" onclick="generatePlan()">Generate Plan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Results (populated by JS) -->
+    <div id="eng-results"></div>
+  </div>
+
+  <!-- ============================================================
+       TAB 4: GUEST SEGMENTS
+       ============================================================ -->
+  <div id="tab-segments" class="tab-content">
+    <h2 class="section-title">Guest Segments</h2>
+    <p class="section-subtitle">Riley's 6 guest segments with current performance and AI-system targets</p>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Segment</th>
+              <th>% of Guests</th>
+              <th>Avg Spend</th>
+              <th>ADR</th>
+              <th>Avg Nights</th>
+              <th>Rebooking Rate</th>
+              <th>Intensity</th>
+            </tr>
+          </thead>
+          <tbody id="segments-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Rebooking Rate: Current vs Target</div>
+      <div id="segments-progress"></div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  NovaStar Hotels &mdash; AI-Powered Post-Stay Engagement System &mdash; Team AWESOME &mdash; Academic Exercise
+</footer>
+
+<!-- ================================================================
+     JAVASCRIPT
+     ================================================================ -->
+<script>
+/* ===================================================================
+   TAB NAVIGATION
+   =================================================================== */
+(function() {
+  var navBtns = document.querySelectorAll('#main-nav button');
+  navBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      navBtns.forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(function(tc) { tc.classList.remove('active'); });
+      document.getElementById('tab-' + btn.getAttribute('data-tab')).classList.add('active');
+    });
+  });
+})();
+
+/* ===================================================================
+   RANGE SLIDER LIVE UPDATE
+   =================================================================== */
+document.getElementById('sim-guests').addEventListener('input', function() {
+  document.getElementById('sim-guests-val').textContent = this.value;
+});
+document.getElementById('eng-nights').addEventListener('input', function() {
+  document.getElementById('eng-nights-val').textContent = this.value;
+});
+
+/* ===================================================================
+   SEEDED RNG -- Mulberry32
+   =================================================================== */
+function mulberry32(seed) {
+  var state = seed | 0;
+  return function() {
+    state = (state + 0x6D2B79F5) | 0;
+    var t = Math.imul(state ^ (state >>> 15), 1 | state);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/* ===================================================================
+   SIMULATION DATA & CONSTANTS
+   =================================================================== */
+var SEGMENT_DIST = [
+  ["Business Regular",         0.22],
+  ["Weekend Leisure Couple",   0.24],
+  ["Family Vacationer",        0.18],
+  ["Budget-Conscious Solo",    0.15],
+  ["Group/Event Attendee",     0.12],
+  ["Extended-Stay/Relocation", 0.09]
+];
+
+var BEFORE_REBOOK = {
+  "Business Regular":         0.194,
+  "Weekend Leisure Couple":   0.107,
+  "Family Vacationer":        0.083,
+  "Budget-Conscious Solo":    0.061,
+  "Group/Event Attendee":     0.142,
+  "Extended-Stay/Relocation": 0.218
+};
+
+var AFTER_REBOOK = {
+  "Business Regular":         0.30,
+  "Weekend Leisure Couple":   0.18,
+  "Family Vacationer":        0.16,
+  "Budget-Conscious Solo":    0.08,
+  "Group/Event Attendee":     0.22,
+  "Extended-Stay/Relocation": 0.30
+};
+
+var BEFORE_EMAIL_OPEN = 0.184;
+var BEFORE_EMAIL_CLICK = 0.021;
+var AFTER_EMAIL_OPEN = 0.38;
+var AFTER_EMAIL_CLICK = 0.08;
+
+var STAGES = [
+  {name: "WARM_FAREWELL",           day: 0},
+  {name: "NOSTALGIA_TRIGGER",       day: 5},
+  {name: "VALUE_REINFORCEMENT",     day: 17},
+  {name: "CONTEXTUAL_REENGAGEMENT", day: 40},
+  {name: "CONVERSION_PUSH",         day: 60},
+  {name: "ONGOING_RELATIONSHIP",    day: 90}
+];
+
+var BEFORE_EMAILS_PER_STAGE = {
+  "WARM_FAREWELL": 1,
+  "NOSTALGIA_TRIGGER": 0,
+  "VALUE_REINFORCEMENT": 1,
+  "CONTEXTUAL_REENGAGEMENT": 1,
+  "CONVERSION_PUSH": 0,
+  "ONGOING_RELATIONSHIP": 0
+};
+
+var AFTER_EMAILS_PER_STAGE = {
+  "WARM_FAREWELL": 1,
+  "NOSTALGIA_TRIGGER": 1,
+  "VALUE_REINFORCEMENT": 1,
+  "CONTEXTUAL_REENGAGEMENT": 1,
+  "CONVERSION_PUSH": 1,
+  "ONGOING_RELATIONSHIP": 1
+};
+
+var INTENSITY = {
+  "Business Regular":         1.2,
+  "Weekend Leisure Couple":   1.0,
+  "Family Vacationer":        1.2,
+  "Budget-Conscious Solo":    0.6,
+  "Group/Event Attendee":     1.0,
+  "Extended-Stay/Relocation": 1.2
+};
+
+var SIM_DAYS = 90;
+
+/* ===================================================================
+   FISHER-YATES SHUFFLE (seeded)
+   =================================================================== */
+function shuffleArray(arr, rng) {
+  for (var i = arr.length - 1; i > 0; i--) {
+    var j = Math.floor(rng() * (i + 1));
+    var tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+  }
+  return arr;
+}
+
+/* ===================================================================
+   ASSIGN SEGMENTS
+   =================================================================== */
+function assignSegments(rng, n) {
+  var segments = [];
+  for (var i = 0; i < SEGMENT_DIST.length; i++) {
+    var count = Math.round(SEGMENT_DIST[i][1] * n);
+    for (var j = 0; j < count; j++) {
+      segments.push(SEGMENT_DIST[i][0]);
+    }
+  }
+  while (segments.length < n) segments.push(SEGMENT_DIST[0][0]);
+  while (segments.length > n) segments.pop();
+  shuffleArray(segments, rng);
+  return segments;
+}
+
+/* ===================================================================
+   SIMULATE ONE SCENARIO
+   =================================================================== */
+function simulate(label, rng, emailOpenRate, emailClickRate, rebookRates, emailsPerStage, usePush, useApp, numGuests) {
+  var segments = assignSegments(rng, numGuests);
+  var guests = [];
+
+  for (var i = 0; i < numGuests; i++) {
+    var captureRate = (label === "AFTER") ? 0.75 : 0.43;
+    var hasEmail = rng() < captureRate;
+    var hasApp = false;
+    if (useApp && hasEmail) {
+      hasApp = rng() < 0.30;
+    }
+    guests.push({
+      segment: segments[i],
+      hasEmail: hasEmail,
+      hasApp: hasApp,
+      emailsSent: 0,
+      emailsOpened: 0,
+      emailsClicked: 0,
+      pushSent: 0,
+      pushOpened: 0,
+      appSessions: 0,
+      rebooked: false
+    });
+  }
+
+  for (var gi = 0; gi < guests.length; gi++) {
+    var g = guests[gi];
+    if (!g.hasEmail && !g.hasApp) continue;
+
+    var intensity = INTENSITY[g.segment] || 1.0;
+    var cumulativeEngagement = 0.0;
+
+    for (var si = 0; si < STAGES.length; si++) {
+      var stage = STAGES[si];
+      if (stage.day > SIM_DAYS) break;
+
+      // Emails
+      var nEmails = emailsPerStage[stage.name] || 0;
+      for (var e = 0; e < nEmails; e++) {
+        if (g.hasEmail) {
+          g.emailsSent++;
+          if (rng() < emailOpenRate * intensity) {
+            g.emailsOpened++;
+            cumulativeEngagement += 0.15;
+            if (rng() < (emailClickRate / emailOpenRate)) {
+              g.emailsClicked++;
+              cumulativeEngagement += 0.25;
+            }
+          }
+        }
+      }
+
+      // Push notifications
+      if (usePush && g.hasApp && stage.name !== "WARM_FAREWELL" && stage.name !== "ONGOING_RELATIONSHIP") {
+        g.pushSent++;
+        if (rng() < 0.35 * intensity) {
+          g.pushOpened++;
+          cumulativeEngagement += 0.10;
+        }
+      }
+
+      // App sessions
+      if (useApp && g.hasApp) {
+        if (rng() < 0.20 * intensity) {
+          g.appSessions++;
+          cumulativeEngagement += 0.10;
+        }
+      }
+    }
+
+    // Rebooking decision
+    var baseRate = rebookRates[g.segment] || 0.12;
+    var engagementBoost = Math.min(cumulativeEngagement * 0.08, 0.10);
+    var finalProb = Math.min(baseRate + engagementBoost, 0.60);
+    if (rng() < finalProb) {
+      g.rebooked = true;
+    }
+  }
+
+  // Aggregate
+  var result = {
+    label: label,
+    totalGuests: numGuests,
+    guestsWithEmail: 0,
+    totalEmailsSent: 0,
+    totalEmailsOpened: 0,
+    totalEmailsClicked: 0,
+    totalPushSent: 0,
+    totalPushOpened: 0,
+    totalAppSessions: 0,
+    totalRebooked: 0,
+    rebookBySegment: {}
+  };
+
+  var segCounts = {};
+  for (var s = 0; s < SEGMENT_DIST.length; s++) {
+    segCounts[SEGMENT_DIST[s][0]] = [0, 0]; // [rebooked, total]
+  }
+
+  for (var gi2 = 0; gi2 < guests.length; gi2++) {
+    var g2 = guests[gi2];
+    if (g2.hasEmail) result.guestsWithEmail++;
+    result.totalEmailsSent += g2.emailsSent;
+    result.totalEmailsOpened += g2.emailsOpened;
+    result.totalEmailsClicked += g2.emailsClicked;
+    result.totalPushSent += g2.pushSent;
+    result.totalPushOpened += g2.pushOpened;
+    result.totalAppSessions += g2.appSessions;
+    if (g2.rebooked) result.totalRebooked++;
+    segCounts[g2.segment][1]++;
+    if (g2.rebooked) segCounts[g2.segment][0]++;
+  }
+  result.rebookBySegment = segCounts;
+  return result;
+}
+
+/* ===================================================================
+   FORMAT HELPERS
+   =================================================================== */
+function pct(n, d) {
+  if (d === 0) return "N/A";
+  return (n / d * 100).toFixed(1) + "%";
+}
+function formatNum(n) {
+  return n.toLocaleString('en-US');
+}
+function deltaStr(val) {
+  var sign = val >= 0 ? "+" : "";
+  return sign + formatNum(val);
+}
+function deltaCls(val) {
+  return val >= 0 ? "delta-pos" : "delta-neg";
+}
+
+/* ===================================================================
+   RUN SIMULATION
+   =================================================================== */
+function runSimulation() {
+  var numGuests = parseInt(document.getElementById('sim-guests').value);
+  var seed = parseInt(document.getElementById('sim-seed').value) || 42;
+
+  var rngBefore = mulberry32(seed);
+  var before = simulate("BEFORE", rngBefore, BEFORE_EMAIL_OPEN, BEFORE_EMAIL_CLICK,
+    BEFORE_REBOOK, BEFORE_EMAILS_PER_STAGE, false, false, numGuests);
+
+  var rngAfter = mulberry32(seed);
+  var after = simulate("AFTER", rngAfter, AFTER_EMAIL_OPEN, AFTER_EMAIL_CLICK,
+    AFTER_REBOOK, AFTER_EMAILS_PER_STAGE, true, true, numGuests);
+
+  // Build results HTML
+  var html = '';
+
+  // Summary stat cards
+  var beforePct = (before.totalRebooked / numGuests * 100).toFixed(1);
+  var afterPct = (after.totalRebooked / numGuests * 100).toFixed(1);
+  var liftPct = (afterPct - beforePct).toFixed(1);
+  html += '<div class="stat-grid">';
+  html += '<div class="stat-card"><div class="stat-value">' + before.totalRebooked + '</div><div class="stat-label">Rebooked BEFORE (' + beforePct + '%)</div></div>';
+  html += '<div class="stat-card"><div class="stat-value">' + after.totalRebooked + '</div><div class="stat-label">Rebooked AFTER (' + afterPct + '%)</div></div>';
+  html += '<div class="stat-card"><div class="stat-value">+' + (after.totalRebooked - before.totalRebooked) + '</div><div class="stat-label">Incremental Rebookings</div></div>';
+  html += '<div class="stat-card"><div class="stat-value">+' + liftPct + 'pp</div><div class="stat-label">Percentage Point Lift</div></div>';
+  html += '</div>';
+
+  // Overall comparison table
+  html += '<div class="card"><div class="card-title">Overall Comparison &mdash; ' + numGuests + ' Guests, Seed ' + seed + '</div>';
+  html += '<div class="table-wrap"><table><thead><tr><th>Metric</th><th style="text-align:right">BEFORE</th><th style="text-align:right">AFTER</th><th style="text-align:right">Delta</th></tr></thead><tbody>';
+
+  var rows = [
+    ["Guests reachable (have email/app)", formatNum(before.guestsWithEmail), formatNum(after.guestsWithEmail), after.guestsWithEmail - before.guestsWithEmail],
+    ["Emails sent", formatNum(before.totalEmailsSent), formatNum(after.totalEmailsSent), after.totalEmailsSent - before.totalEmailsSent],
+    ["Emails opened", before.totalEmailsOpened + " (" + pct(before.totalEmailsOpened, before.totalEmailsSent) + ")", after.totalEmailsOpened + " (" + pct(after.totalEmailsOpened, after.totalEmailsSent) + ")", after.totalEmailsOpened - before.totalEmailsOpened],
+    ["Emails clicked", before.totalEmailsClicked + " (" + pct(before.totalEmailsClicked, before.totalEmailsSent) + ")", after.totalEmailsClicked + " (" + pct(after.totalEmailsClicked, after.totalEmailsSent) + ")", after.totalEmailsClicked - before.totalEmailsClicked],
+    ["Push notifications sent", formatNum(before.totalPushSent), formatNum(after.totalPushSent), after.totalPushSent - before.totalPushSent],
+    ["Push opened", formatNum(before.totalPushOpened), formatNum(after.totalPushOpened), after.totalPushOpened - before.totalPushOpened],
+    ["App sessions (organic)", formatNum(before.totalAppSessions), formatNum(after.totalAppSessions), after.totalAppSessions - before.totalAppSessions],
+    ["REBOOKED (total)", before.totalRebooked + " (" + pct(before.totalRebooked, numGuests) + ")", after.totalRebooked + " (" + pct(after.totalRebooked, numGuests) + ")", after.totalRebooked - before.totalRebooked]
+  ];
+
+  for (var r = 0; r < rows.length; r++) {
+    var isLast = r === rows.length - 1;
+    html += '<tr' + (isLast ? ' style="font-weight:700;background:#f0fdfa;"' : '') + '>';
+    html += '<td>' + rows[r][0] + '</td>';
+    html += '<td class="num">' + rows[r][1] + '</td>';
+    html += '<td class="num">' + rows[r][2] + '</td>';
+    html += '<td class="num ' + deltaCls(rows[r][3]) + '">' + deltaStr(rows[r][3]) + '</td>';
+    html += '</tr>';
+  }
+  html += '</tbody></table></div></div>';
+
+  // Segment breakdown table
+  html += '<div class="card"><div class="card-title">Rebooking by Segment</div>';
+  html += '<div class="table-wrap"><table><thead><tr><th>Segment</th><th style="text-align:right">BEFORE</th><th style="text-align:right">AFTER</th><th style="text-align:right">Delta</th></tr></thead><tbody>';
+
+  for (var s = 0; s < SEGMENT_DIST.length; s++) {
+    var seg = SEGMENT_DIST[s][0];
+    var bData = before.rebookBySegment[seg] || [0,0];
+    var aData = after.rebookBySegment[seg] || [0,0];
+    var bStr = bData[0] + "/" + bData[1] + " (" + pct(bData[0], bData[1]) + ")";
+    var aStr = aData[0] + "/" + aData[1] + " (" + pct(aData[0], aData[1]) + ")";
+    var delta = aData[0] - bData[0];
+    html += '<tr><td>' + seg + '</td>';
+    html += '<td class="num">' + bStr + '</td>';
+    html += '<td class="num">' + aStr + '</td>';
+    html += '<td class="num ' + deltaCls(delta) + '">' + deltaStr(delta) + '</td></tr>';
+  }
+  html += '</tbody></table></div></div>';
+
+  // Financial projections
+  var scale = 80000 / numGuests;
+  var bRepeat = Math.round(before.totalRebooked * scale);
+  var aRepeat = Math.round(after.totalRebooked * scale);
+  var incremental = aRepeat - bRepeat;
+  var avgStayNights = 3.71;
+  var adr = 159.70;
+  var incrementalRevenue = incremental * avgStayNights * adr;
+  var incrementalNights = Math.round(incremental * avgStayNights);
+
+  html += '<div class="card"><div class="card-title">Financial Projection (Scaled to 80,000 Guests/Year)</div>';
+  html += '<div class="table-wrap"><table><thead><tr><th>Metric</th><th style="text-align:right">Value</th></tr></thead><tbody>';
+  html += '<tr><td>Repeat guests (before, scaled)</td><td class="num">' + formatNum(bRepeat) + '</td></tr>';
+  html += '<tr><td>Repeat guests (after, scaled)</td><td class="num">' + formatNum(aRepeat) + '</td></tr>';
+  html += '<tr><td>Incremental repeat guests</td><td class="num delta-pos">+' + formatNum(incremental) + '</td></tr>';
+  html += '<tr><td>Incremental room nights</td><td class="num delta-pos">+' + formatNum(incrementalNights) + '</td></tr>';
+  html += '<tr class="revenue-highlight" style="background:#f0fdfa;"><td><strong>Incremental revenue (est.)</strong></td><td class="num" style="color:#0d9488;font-weight:700;">$' + formatNum(Math.round(incrementalRevenue)) + '</td></tr>';
+  html += '<tr><td>OTA savings (10pp shift to direct)</td><td class="num delta-pos">$560,000</td></tr>';
+  html += '</tbody></table></div></div>';
+
+  document.getElementById('sim-results').innerHTML = html;
+}
+
+/* ===================================================================
+   ENGAGEMENT ENGINE DATA
+   =================================================================== */
+var NAME_MAP = {
+  "Business Regular":         {first: "James",   last: "Chen"},
+  "Weekend Leisure Couple":   {first: "Sofia",   last: "Martinez"},
+  "Family Vacationer":        {first: "David",   last: "Thompson"},
+  "Budget-Conscious Solo":    {first: "Alex",    last: "Nowak"},
+  "Group/Event Attendee":     {first: "Priya",   last: "Sharma"},
+  "Extended-Stay/Relocation": {first: "Michael", last: "Okafor"}
+};
+
+var LOYALTY_MAP = {
+  "Business Regular":         {tier: "Adventurer", points: 8500, nights: 12},
+  "Weekend Leisure Couple":   {tier: "Explorer",   points: 3420, nights: 4},
+  "Family Vacationer":        {tier: "Explorer",   points: 3420, nights: 4},
+  "Budget-Conscious Solo":    {tier: "Explorer",   points: 3420, nights: 4},
+  "Group/Event Attendee":     {tier: "Explorer",   points: 3420, nights: 4},
+  "Extended-Stay/Relocation": {tier: "Voyager",    points: 8500, nights: 12}
+};
+
+var APP_SEGMENTS = ["Business Regular", "Extended-Stay/Relocation"];
+
+var NIGHTS_MAP = {
+  "Business Regular": 2,
+  "Weekend Leisure Couple": 2,
+  "Family Vacationer": 4,
+  "Budget-Conscious Solo": 2,
+  "Group/Event Attendee": 3,
+  "Extended-Stay/Relocation": 12
+};
+
+var RATE_MAP = {
+  "Business Regular": 189,
+  "Weekend Leisure Couple": 152,
+  "Family Vacationer": 174,
+  "Budget-Conscious Solo": 109,
+  "Group/Event Attendee": 141,
+  "Extended-Stay/Relocation": 98
+};
+
+var SISTER_CITIES = {
+  "Austin": "Orlando",
+  "Orlando": "Austin",
+  "Chicago": "Denver",
+  "Denver": "Chicago",
+  "Barcelona": "Lisbon",
+  "London": "Amsterdam"
+};
+
+var INTENSITY_LABEL = {
+  "Business Regular": "HIGH",
+  "Weekend Leisure Couple": "MEDIUM-HIGH",
+  "Family Vacationer": "HIGH",
+  "Budget-Conscious Solo": "LOW",
+  "Group/Event Attendee": "MEDIUM-HIGH",
+  "Extended-Stay/Relocation": "HIGH"
+};
+
+var TRIGGER_SCHEDULE = [
+  {stage: "Warm Farewell",              stageKey: "WARM_FAREWELL",           day: 0},
+  {stage: "Nostalgia Trigger",          stageKey: "NOSTALGIA_TRIGGER",       day: 5},
+  {stage: "Value Reinforcement",        stageKey: "VALUE_REINFORCEMENT",     day: 17},
+  {stage: "Contextual Re-engagement",   stageKey: "CONTEXTUAL_REENGAGEMENT", day: 40},
+  {stage: "Conversion Push",            stageKey: "CONVERSION_PUSH",         day: 60},
+  {stage: "Ongoing Relationship",       stageKey: "ONGOING_RELATIONSHIP",    day: 90}
+];
+
+/* -- Templates (segment -> stageKey -> {subject, body}) -- */
+var TEMPLATES = {
+  "Business Regular": {
+    "WARM_FAREWELL": {
+      subject: "Thanks for staying with us, {name} -- your stay recap is ready",
+      body: "Hi {name},\n\nYour {nights}-night stay at {property} is wrapped up. You earned {points} NovaStar Rewards points.\nYour Business Profile is saved -- next time, express check-in and your preferred room await.\n\nSafe travels,\nNovaStar Hotels"
+    },
+    "NOSTALGIA_TRIGGER": {
+      subject: "Your {city} trip highlights",
+      body: "Hi {name},\n\nQuick recap of your recent {city} stay: {nights} nights, {room_type} room. We hope the meetings went well.\nYour preferences are locked in for next time.\n\n-- NovaStar Hotels"
+    },
+    "VALUE_REINFORCEMENT": {
+      subject: "{name}, you're {nights_to_next} nights from Adventurer status",
+      body: "Hi {name},\n\nYou have {points} points and are just {nights_to_next} qualifying nights from unlocking Adventurer tier -- free room upgrades, guaranteed late checkout, and 15 pts per dollar.\n\nBook your next stay direct at NovaStar.com for 2x points.\n\n-- NovaStar Hotels"
+    },
+    "CONVERSION_PUSH": {
+      subject: "Your {city} room is waiting, {name}",
+      body: "Hi {name},\n\nHeading back to {city}? Your corner room and express check-in are one tap away. Book direct and earn double points this month.\n\n{offer_text}\n\n-- NovaStar Hotels"
+    }
+  },
+  "Weekend Leisure Couple": {
+    "WARM_FAREWELL": {
+      subject: "Your {city} memories are ready, {name}",
+      body: "Hi {name},\n\nWhat a {nights}-night getaway! Here is your stay recap from {property}. Share your favourite moment with friends.\n\nAlready dreaming of your next escape? Check out our sister properties -- new cities, same NovaStar quality.\n\n-- NovaStar Hotels"
+    },
+    "NOSTALGIA_TRIGGER": {
+      subject: "Missing {city}? We have photos",
+      body: "Hi {name},\n\nYour {city} highlights: the rooftop view, the local food scene, and {nights} nights of relaxation. Add your own photos to your NovaStar travel journal.\n\n-- NovaStar Hotels"
+    },
+    "CONTEXTUAL_REENGAGEMENT": {
+      subject: "{city} in a new season -- 5 experiences you haven't tried",
+      body: "Hi {name},\n\n{city} has a whole new personality this time of year. Here are 5 experiences our Local Explorer team hand-picked for you.\n\n{offer_text}\n\n-- NovaStar Hotels"
+    },
+    "CONVERSION_PUSH": {
+      subject: "A new NovaStar city awaits, {name}",
+      body: "Hi {name},\n\nYou loved {city}. How about discovering {alt_city} next? Same NovaStar comfort, completely new adventure.\n\n{offer_text}\n\n-- NovaStar Hotels"
+    }
+  },
+  "Family Vacationer": {
+    "WARM_FAREWELL": {
+      subject: "The {last_name} family's stay recap is ready!",
+      body: "Hi {name},\n\nWe loved having your family for {nights} nights at {property}! The kids enjoyed the {amenities}. Your Family Favourites profile is saved for next time.\n\nYou earned {points} NovaStar Rewards points.\n\n-- NovaStar Hotels"
+    },
+    "NOSTALGIA_TRIGGER": {
+      subject: "The kids are already asking to go back to {city}",
+      body: "Hi {name},\n\nRemember the {amenities} at {property}? Your family trip highlights are in the NovaStar app. Share them or save them for the fridge!\n\n-- NovaStar Hotels"
+    },
+    "VALUE_REINFORCEMENT": {
+      subject: "School holidays sorted -- kids stay free at NovaStar",
+      body: "Hi {name},\n\nPlanning the next family trip? Book direct and get kids-stay-free, breakfast included, and early pool access.\n\n{offer_text}\n\n-- NovaStar Hotels"
+    },
+    "CONVERSION_PUSH": {
+      subject: "Wait till the kids see NovaStar {alt_city}",
+      body: "Hi {name},\n\nYour family loved {city}. NovaStar {alt_city} has a waterpark suite and kids' adventure club starting at $159/night.\n\n{offer_text}\n\n-- NovaStar Hotels"
+    }
+  },
+  "Budget-Conscious Solo": {
+    "WARM_FAREWELL": {
+      subject: "Thanks for staying at NovaStar, {name}",
+      body: "Hi {name},\n\nHope you enjoyed your stay at {property}. Join NovaStar Rewards (free) and get member-only rates next time.\n\n-- NovaStar Hotels"
+    },
+    "CONVERSION_PUSH": {
+      subject: "Flash deal: {city} from $89/night",
+      body: "Hi {name},\n\nGreat room, great price, great location.\n{offer_text}\n\n-- NovaStar Hotels"
+    }
+  },
+  "Group/Event Attendee": {
+    "WARM_FAREWELL": {
+      subject: "We hope the event in {city} was a hit, {name}",
+      body: "Hi {name},\n\nWe loved hosting your group at {property}. Your event photos and stay highlights are in the app.\n\n-- NovaStar Hotels"
+    },
+    "NOSTALGIA_TRIGGER": {
+      subject: "Remember {city}? Your personal return offer is inside",
+      body: "Hi {name},\n\nThe event may be over, but {city} has so much more to offer. Next time, come back on your own terms.\n\n{offer_text}\n\n-- NovaStar Hotels"
+    },
+    "CONVERSION_PUSH": {
+      subject: "Your {city} room is waiting, {name}",
+      body: "Hi {name},\n\nReturn to {city} with a special individual rate -- no group needed.\n\n{offer_text}\n\n-- NovaStar Hotels"
+    }
+  },
+  "Extended-Stay/Relocation": {
+    "WARM_FAREWELL": {
+      subject: "Welcome to NovaStar Residents, {name}",
+      body: "Hi {name},\n\nAfter {nights} nights you are practically family. Your NovaStar Residents profile keeps your preferences and staff notes for your next assignment.\n\nYou earned {points} NovaStar Rewards points.\n\n-- NovaStar Hotels"
+    },
+    "VALUE_REINFORCEMENT": {
+      subject: "Your next project? NovaStar has you covered",
+      body: "Hi {name},\n\nWherever your next assignment takes you, your NovaStar Residents rate and priority booking are ready.\n\nRefer a colleague and you both earn 2,000 bonus points.\n\n-- NovaStar Hotels"
+    },
+    "CONVERSION_PUSH": {
+      subject: "Welcome back, resident -- {city} misses you",
+      body: "Hi {name},\n\nYour extended-stay rate is locked. Book direct for priority room selection and 2x points.\n\n{offer_text}\n\n-- NovaStar Hotels"
+    }
+  }
+};
+
+/* -- Perks per segment -- */
+var PERKS_MAP = {
+  "Business Regular": ["late checkout guaranteed", "express check-in", "2x points"],
+  "Weekend Leisure Couple": ["couples dining credit", "room upgrade when available"],
+  "Family Vacationer": ["kids stay free", "breakfast included", "early pool access"],
+  "Budget-Conscious Solo": ["flash-sale rate"],
+  "Group/Event Attendee": ["individual return discount"],
+  "Extended-Stay/Relocation": ["rate lock", "priority room selection"]
+};
+
+var BASE_DISCOUNT = {
+  "Business Regular": 0.0,
+  "Weekend Leisure Couple": 0.08,
+  "Family Vacationer": 0.10,
+  "Budget-Conscious Solo": 0.12,
+  "Group/Event Attendee": 0.10,
+  "Extended-Stay/Relocation": 0.05
+};
+
+/* -- Churn risk calculator -- */
+function calcChurnRisk(segment, daysSinceCheckout, engagementScore, bookingChannel, loyalty) {
+  var risk = 0.5;
+  if (daysSinceCheckout > 60) risk += 0.15;
+  else if (daysSinceCheckout > 30) risk += 0.08;
+  if (engagementScore < 0.2) risk += 0.15;
+  else if (engagementScore < 0.5) risk += 0.05;
+  if (bookingChannel === "OTA") risk += 0.10;
+  if (loyalty && (loyalty.tier === "Voyager" || loyalty.tier === "Ambassador")) risk -= 0.20;
+  else if (loyalty && loyalty.tier === "Adventurer") risk -= 0.10;
+  return Math.max(0, Math.min(1, risk));
+}
+
+/* -- Pick channel -- */
+function pickChannel(segment, stageKey, hasApp) {
+  if (hasApp) {
+    if (stageKey === "CONVERSION_PUSH" || stageKey === "VALUE_REINFORCEMENT") return "email";
+    return "push";
+  }
+  return "email";
+}
+
+/* -- Generate offer -- */
+function generateOffer(segment, city, churnRisk, stageKey) {
+  var discount = BASE_DISCOUNT[segment] || 0.08;
+  var intensityLabel = INTENSITY_LABEL[segment] || "LOW";
+  if (churnRisk > 0.7 && intensityLabel !== "LOW") {
+    discount = Math.min(discount + 0.05, 0.15);
+  }
+  var perks = PERKS_MAP[segment] || [];
+  var pointsBonus = churnRisk > 0.6 ? 500 : 0;
+  var altCity = SISTER_CITIES[city] || "Miami";
+  var target = (stageKey === "CONVERSION_PUSH") ? altCity : city;
+
+  var discountStr = discount > 0 ? (Math.round(discount * 100) + "% off + ") : "";
+  var perkStr = perks.slice(0, 2).join(" & ");
+  var headline = discountStr + perkStr;
+
+  var offerText = "YOUR OFFER: " + discountStr + perks.join(", ") + ". ";
+  if (pointsBonus > 0) offerText += "Plus " + pointsBonus + " bonus points! ";
+  offerText += "Valid for 30 days. Book at NovaStar.com.";
+
+  return {
+    headline: headline,
+    discountPct: discount,
+    pointsBonus: pointsBonus,
+    perks: perks,
+    targetProperty: "NovaStar " + target,
+    offerText: offerText
+  };
+}
+
+/* ===================================================================
+   GENERATE TRIGGER PLAN
+   =================================================================== */
+function generatePlan() {
+  var segment = document.getElementById('eng-segment').value;
+  var city = document.getElementById('eng-city').value;
+  var nights = parseInt(document.getElementById('eng-nights').value);
+
+  var nameInfo = NAME_MAP[segment];
+  var loyalty = LOYALTY_MAP[segment];
+  var hasApp = APP_SEGMENTS.indexOf(segment) >= 0;
+  var rate = RATE_MAP[segment] || 160;
+  var totalSpend = rate * nights;
+  var property = "NovaStar " + city;
+  var roomType = segment === "Extended-Stay/Relocation" ? "Suite" : "Standard";
+  var amenities = segment === "Family Vacationer" ? "pool, breakfast" : "wifi";
+  var altCity = SISTER_CITIES[city] || "Miami";
+  var nightsToNext = Math.max(0, 5 - (loyalty.nights || 0));
+  var bookingChannel = segment === "Business Regular" ? "Corporate" : "OTA";
+
+  // Filter schedule for LOW intensity
+  var schedule = TRIGGER_SCHEDULE.slice();
+  if (INTENSITY_LABEL[segment] === "LOW") {
+    schedule = schedule.filter(function(t) {
+      return t.stageKey === "WARM_FAREWELL" || t.stageKey === "CONVERSION_PUSH";
+    });
+  }
+
+  // Build HTML
+  var html = '';
+
+  // Guest profile card
+  html += '<div class="guest-profile">';
+  html += '<div class="profile-item"><label>Guest Name</label><span>' + nameInfo.first + ' ' + nameInfo.last + '</span></div>';
+  html += '<div class="profile-item"><label>Segment</label><span>' + segment + '</span></div>';
+  html += '<div class="profile-item"><label>Loyalty Tier</label><span>' + loyalty.tier + '</span></div>';
+  html += '<div class="profile-item"><label>Points</label><span>' + formatNum(loyalty.points) + '</span></div>';
+  html += '<div class="profile-item"><label>Property</label><span>' + property + '</span></div>';
+  html += '<div class="profile-item"><label>Total Spend</label><span>$' + formatNum(totalSpend) + '</span></div>';
+  html += '</div>';
+
+  // Trigger cards
+  for (var i = 0; i < schedule.length; i++) {
+    var entry = schedule[i];
+    var stageKey = entry.stageKey;
+    var day = entry.day;
+    var stageName = entry.stage;
+
+    var churnRisk = calcChurnRisk(segment, day, 0.3, bookingChannel, loyalty);
+    var channel = pickChannel(segment, stageKey, hasApp);
+
+    // Get template
+    var segTemplates = TEMPLATES[segment] || {};
+    var tmpl = segTemplates[stageKey];
+    if (!tmpl) {
+      tmpl = segTemplates["WARM_FAREWELL"] || {
+        subject: "A note from NovaStar Hotels",
+        body: "Hi {name},\n\nThank you for choosing NovaStar.\n\n-- NovaStar Hotels"
+      };
+    }
+
+    // Generate offer for conversion stages
+    var offer = null;
+    var offerText = "";
+    if (stageKey === "CONVERSION_PUSH" || stageKey === "CONTEXTUAL_REENGAGEMENT" || stageKey === "VALUE_REINFORCEMENT") {
+      offer = generateOffer(segment, city, churnRisk, stageKey);
+      offerText = offer.offerText;
+    }
+
+    // Fill template
+    var fill = {
+      "name": nameInfo.first,
+      "last_name": nameInfo.last,
+      "city": city,
+      "property": property,
+      "nights": String(nights),
+      "room_type": roomType,
+      "points": String(loyalty.points),
+      "nights_to_next": String(nightsToNext),
+      "alt_city": altCity,
+      "offer_text": offerText,
+      "amenities": amenities
+    };
+
+    var subject = tmpl.subject;
+    var body = tmpl.body;
+    for (var key in fill) {
+      subject = subject.split("{" + key + "}").join(fill[key]);
+      body = body.split("{" + key + "}").join(fill[key]);
+    }
+
+    // Card color by stage
+    var borderColors = {
+      "WARM_FAREWELL": "#3b82f6",
+      "NOSTALGIA_TRIGGER": "#8b5cf6",
+      "VALUE_REINFORCEMENT": "#0d9488",
+      "CONTEXTUAL_REENGAGEMENT": "#f59e0b",
+      "CONVERSION_PUSH": "#ef4444",
+      "ONGOING_RELATIONSHIP": "#6366f1"
+    };
+    var borderColor = borderColors[stageKey] || "#0d9488";
+
+    html += '<div class="trigger-card" style="border-left-color:' + borderColor + ';">';
+    html += '<div class="trigger-header">';
+    html += '<span class="trigger-day">Day ' + day + '</span>';
+    html += '<span class="trigger-stage">' + stageName + '</span>';
+    html += '<span class="trigger-channel">' + channel + '</span>';
+    html += '</div>';
+    html += '<div class="trigger-subject">' + escapeHtml(subject) + '</div>';
+    html += '<div class="trigger-body">' + escapeHtml(body) + '</div>';
+    if (offer) {
+      html += '<div class="trigger-offer">';
+      html += '<strong>Offer:</strong> ' + escapeHtml(offer.headline);
+      if (offer.discountPct > 0) html += ' | Discount: ' + Math.round(offer.discountPct * 100) + '%';
+      if (offer.pointsBonus > 0) html += ' | Bonus points: ' + offer.pointsBonus;
+      html += ' | Target: ' + escapeHtml(offer.targetProperty);
+      html += '<br><strong>Perks:</strong> ' + escapeHtml(offer.perks.join(", "));
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+
+  document.getElementById('eng-results').innerHTML = html;
+}
+
+function escapeHtml(str) {
+  var div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+}
+
+/* ===================================================================
+   GUEST SEGMENTS TABLE
+   =================================================================== */
+(function() {
+  var segments = [
+    {name: "Business Regular",         pct: "22%", spend: "$378",  adr: "$189", nights: "2",  currentRebook: 19.4, targetRebook: 30.0, intensity: "HIGH"},
+    {name: "Weekend Leisure Couple",   pct: "24%", spend: "$304",  adr: "$152", nights: "2",  currentRebook: 10.7, targetRebook: 18.0, intensity: "MEDIUM-HIGH"},
+    {name: "Family Vacationer",        pct: "18%", spend: "$696",  adr: "$174", nights: "4",  currentRebook: 8.3,  targetRebook: 16.0, intensity: "HIGH"},
+    {name: "Budget-Conscious Solo",    pct: "15%", spend: "$218",  adr: "$109", nights: "2",  currentRebook: 6.1,  targetRebook: 8.0,  intensity: "LOW"},
+    {name: "Group/Event Attendee",     pct: "12%", spend: "$423",  adr: "$141", nights: "3",  currentRebook: 14.2, targetRebook: 22.0, intensity: "MEDIUM-HIGH"},
+    {name: "Extended-Stay/Relocation", pct: "9%",  spend: "$1,176", adr: "$98", nights: "12", currentRebook: 21.8, targetRebook: 30.0, intensity: "HIGH"}
+  ];
+
+  var badgeClass = {
+    "HIGH": "badge-high",
+    "MEDIUM-HIGH": "badge-medium-high",
+    "MEDIUM": "badge-medium",
+    "LOW": "badge-low"
+  };
+
+  // Table
+  var tbody = document.getElementById('segments-table-body');
+  var tableHtml = '';
+  for (var i = 0; i < segments.length; i++) {
+    var s = segments[i];
+    tableHtml += '<tr>';
+    tableHtml += '<td><strong>' + s.name + '</strong></td>';
+    tableHtml += '<td class="num">' + s.pct + '</td>';
+    tableHtml += '<td class="num">' + s.spend + '</td>';
+    tableHtml += '<td class="num">' + s.adr + '</td>';
+    tableHtml += '<td class="num">' + s.nights + '</td>';
+    tableHtml += '<td class="num">' + s.currentRebook + '% &#8594; ' + s.targetRebook + '%</td>';
+    tableHtml += '<td><span class="badge ' + (badgeClass[s.intensity] || 'badge-medium') + '">' + s.intensity + '</span></td>';
+    tableHtml += '</tr>';
+  }
+  tbody.innerHTML = tableHtml;
+
+  // Progress bars
+  var progressDiv = document.getElementById('segments-progress');
+  var progressHtml = '';
+  var maxTarget = 35; // scale bar to 35%
+  for (var j = 0; j < segments.length; j++) {
+    var seg = segments[j];
+    var currentWidth = (seg.currentRebook / maxTarget * 100).toFixed(1);
+    var targetWidth = (seg.targetRebook / maxTarget * 100).toFixed(1);
+    progressHtml += '<div style="margin-bottom:14px;">';
+    progressHtml += '<div style="display:flex;justify-content:space-between;margin-bottom:4px;">';
+    progressHtml += '<span style="font-size:13px;font-weight:600;color:#1a365d;">' + seg.name + '</span>';
+    progressHtml += '<span style="font-size:12px;color:#64748b;">' + seg.currentRebook + '% &#8594; ' + seg.targetRebook + '%</span>';
+    progressHtml += '</div>';
+    progressHtml += '<div class="progress-bar">';
+    progressHtml += '<div class="progress-fill-target" style="width:' + targetWidth + '%;"></div>';
+    progressHtml += '<div class="progress-fill-current" style="width:' + currentWidth + '%;"></div>';
+    progressHtml += '</div>';
+    progressHtml += '</div>';
+  }
+  progressDiv.innerHTML = progressHtml;
+})();
+
+/* ===================================================================
+   AUTO-RUN SIMULATION ON LOAD
+   =================================================================== */
+runSimulation();
+</script>
+
+</body>
+</html>
