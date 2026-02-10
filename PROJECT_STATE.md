@@ -10,6 +10,8 @@
 **Problem:** Guests enjoy their stay but never come back. Repeat bookings are being lost to Airbnb.
 **Goal:** Design and demonstrate an AI-powered post-stay engagement system that turns one-time guests into loyal repeat customers.
 **Team:** Team AWESOME (5-agent sequential workflow)
+**Repository:** https://github.com/SacriTom/novastar-engagement-system
+**Live Dashboard:** https://sacritom.github.io/novastar-engagement-system/
 
 ---
 
@@ -79,11 +81,49 @@ Each agent's output becomes the next agent's input. Sequential pipeline.
 
 ---
 
+## Post-Pipeline Deliverables
+
+### Python Verification
+- **Status:** COMPLETE
+- **Date:** 2026-02-10
+- **Result:** All 3 Python files (`data_models.py`, `engagement_engine.py`, `guest_journey_simulation.py`) run successfully with Python 3.14, standard library only. Simulation output verified: rebooking 4%→17%, financial projections consistent with design targets.
+
+### PDF Report
+- **Status:** COMPLETE
+- **Output:** `outputs/NovaStar_Final_Report.pdf`
+- **Generator:** `outputs/generate_report_pdf.py` (uses fpdf2)
+- **Details:** Professional formatted PDF of Morgan's full report — title page, styled headings, tables with alternating rows, bullet points, page numbers, dark blue (#1a365d) colour scheme
+
+### Flask Web UI (Local)
+- **Status:** COMPLETE
+- **Output:** `outputs/03_technical_build/app.py`
+- **How to run:** `cd outputs/03_technical_build && python app.py` → http://127.0.0.1:5000
+- **Pages:** Dashboard Home (`/`), Simulation (`/simulation`), Engagement Engine (`/engine`), Guest Segments (`/segments`)
+- **Details:** Interactive dashboard with adjustable simulation parameters, engagement engine demo with form inputs, segment overview. Requires Flask.
+
+### Standalone HTML Dashboard (GitHub Pages)
+- **Status:** COMPLETE
+- **Output:** `index.html`
+- **Live URL:** https://sacritom.github.io/novastar-engagement-system/
+- **Details:** Single-file HTML/CSS/JS with all simulation and engagement engine logic ported to JavaScript. Zero dependencies. Works for anyone with the link — no server or installation needed. Includes: Dashboard, Simulation (adjustable params), Engagement Engine (interactive), Guest Segments.
+
+### GitHub Repository
+- **Status:** COMPLETE
+- **URL:** https://github.com/SacriTom/novastar-engagement-system
+- **Visibility:** Public
+- **GitHub Pages:** Enabled (serves index.html from main branch)
+
+---
+
 ## Decisions Log
 
 | # | Decision | Made By | Date | Rationale |
 |---|----------|---------|------|-----------|
 | 1 | Adapted agent personas from NorthSouth Coffee to NovaStar Hotels | Team + User | 2026-02-10 | Reuse proven team structure for new domain |
+| 2 | All Python code uses standard library only (no pip installs) | Max | 2026-02-10 | Maximum portability for academic demo |
+| 3 | PDF generated with fpdf2 (already installed) | Team | 2026-02-10 | Lightweight PDF generation without heavy dependencies |
+| 4 | Flask for local UI, standalone HTML for GitHub Pages | Team + User | 2026-02-10 | Flask for rich local experience; pure HTML/JS for universal web access |
+| 5 | GitHub Pages enabled on main branch root | Team + User | 2026-02-10 | Anyone with the link can interact with the project |
 
 ---
 
@@ -91,12 +131,29 @@ Each agent's output becomes the next agent's input. Sequential pipeline.
 
 | # | Issue | Status | Owner | Resolution |
 |---|-------|--------|-------|------------|
-| — | None yet | — | — | — |
+| 1 | OneDrive file lock on initial PDF generation | RESOLVED | Team | Used alternative filename `NovaStar_Final_Report.pdf` |
+| 2 | Git identity not configured on machine | RESOLVED | User | Configured with GitHub username SacriTom |
 
 ---
 
 ## Project Timeline
 
 - **Project Start:** 2026-02-10
-- **Current Phase:** ALL PHASES COMPLETE — Project finished
-- **Target Completion:** 2026-02-10 (single session)
+- **Phase 1-5 Complete:** 2026-02-10
+- **Verification, PDF, UI, GitHub:** 2026-02-10
+- **Current Status:** ALL DELIVERABLES COMPLETE
+- **Total files produced:** 31 (5 agent personas, 14 phase outputs, 1 PDF, 1 PDF generator, 1 Flask app, 1 standalone HTML, 3 project tracking files, 1 .gitignore)
+
+---
+
+## Key Metrics Summary
+
+| Metric | Current State | Projected (12-Month) | Projected (24-Month) |
+|--------|--------------|---------------------|---------------------|
+| Repeat booking rate | 12.1% | 25% | 32% |
+| Guest data capture | 43% | 75% | 85% |
+| Loyalty enrolment | 11.3% | 40% | 50% |
+| Direct booking share | 27% | 40% | 50% |
+| Post-stay email open rate | 18.4% | 38% | 42% |
+| Incremental annual revenue | — | +$4.84M | +$7.42M |
+| Cumulative incremental value | — | $4.84M | $12.26M |

@@ -2,7 +2,17 @@
 
 ## NovaStar Hotels: AI-Powered Post-Stay Engagement System
 
-> This project is **COMPLETE**. All 5 phases have been executed.
+> This project is **COMPLETE**. All 5 phases + post-pipeline deliverables are done.
+
+---
+
+## Quick Links
+
+| Resource | URL |
+|----------|-----|
+| **Live Dashboard** | https://sacritom.github.io/novastar-engagement-system/ |
+| **GitHub Repository** | https://github.com/SacriTom/novastar-engagement-system |
+| **PDF Report** | `outputs/NovaStar_Final_Report.pdf` |
 
 ---
 
@@ -17,42 +27,87 @@
 ## Deliverables Map
 
 ```
-agents/
-  01_researcher.md          — Riley's persona
-  02_designer.md            — Dana's persona
-  03_maker.md               — Max's persona
-  04_communications.md      — Casey's persona
-  05_manager.md             — Morgan's persona
-
-outputs/
-  01_research_report.md     — Riley: Discovery & landscape analysis
-  02_solution_design.md     — Dana: Solution blueprint & system architecture
-  03_technical_build/
-    data_models.py          — Max: Database schema (8 dataclasses, 7 enums)
-    engagement_engine.py    — Max: AI personalisation & trigger engine
-    guest_journey_simulation.py — Max: 90-day simulation (100 guests)
-    dashboard_spec.md       — Max: Analytics dashboard specification
-    implementation_summary.md — Max: Technical overview & build notes
-  04_communications/
-    launch_strategy.md      — Casey: 3-phase rollout plan
-    messaging_framework.md  — Casey: Tagline, value props, segment messaging
-    win_back_campaign.md    — Casey: 30-day win-back sequence
-    on_property_playbook.md — Casey: Front-desk scripts & in-room touchpoints
-    content_calendar.md     — Casey: 90-day channel plan
-    templates/
-      email_templates.md    — 4 ready-to-use email templates
-      push_notifications.md — 10 trigger-based push templates
-      in_app_messages.md    — 8 contextual in-app messages
-      sms_templates.md      — 6 SMS templates
-  05_manager_report.md      — Morgan: Final review, coherence check, retrospective
-
-PROJECT_STATE.md            — Planning and progress tracker
-QUICKSTART.md               — This file (checkpoint prompts)
+Project Root
+├── index.html                    — Standalone interactive dashboard (GitHub Pages)
+├── PROJECT_STATE.md              — Planning and progress tracker
+├── QUICKSTART.md                 — This file
+│
+├── agents/
+│   ├── 01_researcher.md          — Riley's persona
+│   ├── 02_designer.md            — Dana's persona
+│   ├── 03_maker.md               — Max's persona
+│   ├── 04_communications.md      — Casey's persona
+│   └── 05_manager.md             — Morgan's persona
+│
+└── outputs/
+    ├── 01_research_report.md     — Riley: Discovery & landscape analysis
+    ├── 02_solution_design.md     — Dana: Solution blueprint & system architecture
+    ├── 03_technical_build/
+    │   ├── data_models.py        — Max: Database schema (8 dataclasses, 7 enums)
+    │   ├── engagement_engine.py  — Max: AI personalisation & trigger engine
+    │   ├── guest_journey_simulation.py — Max: 90-day simulation (100 guests)
+    │   ├── app.py                — Flask web UI (local dashboard)
+    │   ├── dashboard_spec.md     — Max: Analytics dashboard specification
+    │   └── implementation_summary.md — Max: Technical overview & build notes
+    ├── 04_communications/
+    │   ├── launch_strategy.md    — Casey: 3-phase rollout plan
+    │   ├── messaging_framework.md — Casey: Tagline, value props, segment messaging
+    │   ├── win_back_campaign.md  — Casey: 30-day win-back sequence
+    │   ├── on_property_playbook.md — Casey: Front-desk scripts & in-room touchpoints
+    │   ├── content_calendar.md   — Casey: 90-day channel plan
+    │   └── templates/
+    │       ├── email_templates.md    — 4 ready-to-use email templates
+    │       ├── push_notifications.md — 10 trigger-based push templates
+    │       ├── in_app_messages.md    — 8 contextual in-app messages
+    │       └── sms_templates.md      — 6 SMS templates
+    ├── 05_manager_report.md      — Morgan: Final review, coherence check, retrospective
+    ├── NovaStar_Final_Report.pdf  — PDF version of Morgan's report
+    └── generate_report_pdf.py    — Script to regenerate the PDF
 ```
 
 ---
 
-## How to Re-Run Any Phase
+## How to Use This Project
+
+### 1. View the Live Dashboard (No install needed)
+Open https://sacritom.github.io/novastar-engagement-system/ in any browser.
+- Run simulations with adjustable parameters
+- Test the engagement engine for any guest segment
+- Browse guest segment data
+
+### 2. Run Python Code Locally
+```bash
+cd outputs/03_technical_build
+
+# Run data models demo
+python data_models.py
+
+# Run engagement engine demo
+python engagement_engine.py
+
+# Run 90-day simulation
+python guest_journey_simulation.py
+```
+Requires: Python 3.10+ (standard library only, no pip installs)
+
+### 3. Run Flask Web UI Locally
+```bash
+cd outputs/03_technical_build
+python app.py
+# Open http://127.0.0.1:5000
+```
+Requires: Python 3.10+ and Flask (`pip install flask`)
+
+### 4. Regenerate the PDF Report
+```bash
+cd outputs
+python generate_report_pdf.py
+```
+Requires: Python 3.10+ and fpdf2 (`pip install fpdf2`)
+
+---
+
+## How to Re-Run Any Agent Phase
 
 Each phase can be independently re-run using the prompt templates in the agent persona files (`agents/0X_*.md`). The sequential dependency is:
 
@@ -139,5 +194,32 @@ and finalise PROJECT_STATE.md.
 | 3 | Build | Max | COMPLETE | 2026-02-10 |
 | 4 | Communications | Casey | COMPLETE | 2026-02-10 |
 | 5 | Manager Review | Morgan | COMPLETE | 2026-02-10 |
+| 6 | Python Verification | Team | COMPLETE | 2026-02-10 |
+| 7 | PDF Report Generation | Team | COMPLETE | 2026-02-10 |
+| 8 | Flask Web UI | Team | COMPLETE | 2026-02-10 |
+| 9 | Standalone HTML Dashboard | Team | COMPLETE | 2026-02-10 |
+| 10 | GitHub Repo + Pages | Team | COMPLETE | 2026-02-10 |
+
+---
+
+## Continuation Prompt (if resuming in a new session)
+
+```
+We are working on the NovaStar Hotels AI-Powered Post-Stay Engagement System
+for Team AWESOME. This is an academic exercise (Week 4 Group Exercise).
+
+The project is COMPLETE with all 5 agent phases done, Python code verified,
+PDF report generated, Flask UI built, and a standalone HTML dashboard deployed
+to GitHub Pages.
+
+Read PROJECT_STATE.md and QUICKSTART.md for full context. The GitHub repo is at:
+https://github.com/SacriTom/novastar-engagement-system
+The live dashboard is at:
+https://sacritom.github.io/novastar-engagement-system/
+
+[Describe what you'd like to do next]
+```
+
+---
 
 **PROJECT STATUS: COMPLETE**
